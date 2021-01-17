@@ -11,8 +11,8 @@ if __name__ == '__main__':
         .config(conf=conf) \
         .getOrCreate()
     # # To check configuration
-    conf_out = spark.sparkContext.getConf()
-    print(conf_out.toDebugString())
+    # conf_out = spark.sparkContext.getConf()
+    # print(conf_out.toDebugString())
 
     logger = Log4j(spark)
     if len(sys.argv) != 2:
