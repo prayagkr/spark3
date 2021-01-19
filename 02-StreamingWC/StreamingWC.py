@@ -10,6 +10,7 @@ if __name__ == '__main__':
     # spark = SparkSession.builder.appName('Hello Spark').master('local[3]').getOrCreate()
     spark: SparkSession = SparkSession.builder \
         .config(conf=conf) \
+        .config("spark.streaming.stopGracefullyOnShutdown", "true") \
         .getOrCreate()
     # # To check configuration
     # conf_out = spark.sparkContext.getConf()
