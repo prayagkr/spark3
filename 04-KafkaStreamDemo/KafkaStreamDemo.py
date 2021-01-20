@@ -13,6 +13,8 @@ if __name__ == '__main__':
     spark: SparkSession = SparkSession.builder \
         .config(conf=conf) \
         .config("spark.streaming.stopGracefullyOnShutdown", "true") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1,"
+                                       "org.apache.spark:spark-avro_2.12:3.0.1") \
         .getOrCreate()
 
     # conf_out = spark.sparkContext.getConf()
