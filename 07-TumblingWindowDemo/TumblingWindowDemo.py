@@ -16,7 +16,8 @@ if __name__ == '__main__':
         .config("spark.streaming.stopGracefullyOnShutdown", "true") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1,"
                                        "org.apache.spark:spark-avro_2.12:3.0.1,"
-                                       "io.delta:delta-core_2.12:0.7.0") \
+                                       "io.delta:delta-core_2.12:0.7.0,"
+                                       "org.postgresql:postgresql:42.2.19") \
         .config("spark.driver.extraJavaOptions", "-Dlog4j.configuration=file:log4j.properties "
                                                  "-Dspark.yarn.app.container.log.dir=app-logs "
                                                  "-Dlogfile.name=hello-spark") \
@@ -56,11 +57,13 @@ if __name__ == '__main__':
 
     # trade_df.printSchema()
 
+    # water mark is made to set expiry time
     window_agg_df = trade_df \
+        .withWatermark("CreatedTime", "30 minute") \
         .groupBy(
             window(col("CreatedTime"), "15 minute")) \
-            .agg(_sum("Buy").alias("TotalBuy"),
-                 _sum("Sell").alias("TotalSell"))
+        .agg(_sum("Buy").alias("TotalBuy"),
+             _sum("Sell").alias("TotalSell"))
 
     # window_agg_df.printSchema()
     output_df = window_agg_df.select("window.start", "window.end", "TotalBuy", "TotalSell")
